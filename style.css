@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+
+    background-image: url('abstract-dark-colorful-digital-art-yi-3840x2400.jpg');
+}
+nav{
+    
+    
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgb(19, 0, 36) 0%, rgb(82, 106, 245) 0%, c 100%);
+    
+    border-radius: 24px;
+    -webkit-margin-collapse: collapse;
+    border:  solid rgb(77, 118, 180);
+    width: 90%;
+    margin: 0 auto;
+    
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.deck {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+.deck a {
+    text-decoration: none;
+    color: #3498db;
+    font-weight: bold;
+}
+.logout {
+    text-align: right;
+    margin-bottom: 20px;
+}
+.logout a {
+    text-decoration: none;
+    color: white;
+    background: #e74c3c;
+    padding: 10px 15px;
+    border-radius: 5px;
+}

@@ -1,30 +1,17 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
     background-size: cover;
-
+    display: flex;
+    flex-direction: row;
     background-image: url('abstract-dark-colorful-digital-art-yi-3840x2400.jpg');
 }
-nav{
-    
-    
-    background: rgb(2,0,36);
-    background: linear-gradient(90deg, rgb(19, 0, 36) 0%, rgb(82, 106, 245) 0%, c 100%);
-    
-    border-radius: 24px;
-    -webkit-margin-collapse: collapse;
-    border:  solid rgb(77, 118, 180);
-    width: 90%;
-    margin: 0 auto;
-    
-    border-collapse: collapse;
-    margin-top: 1rem;
-  }
+
+  
 .container {
-    max-width: 800px;
-    margin: 50px auto;
+    width: 500px;
+    margin:10% auto;
     padding: 20px;
     background: white;
     border-radius: 10px;
@@ -32,24 +19,64 @@ nav{
 }
 .deck {
     margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
+    padding: 20px;
+    border: 1px solid #797979;
     border-radius: 5px;
-    background: #f9f9f9;
+    background: #f0efef;
+    width: 50%;
+    margin: 1rem auto;
+    text-align: center;
+    transition: 0.4s;
+}
+.deck:hover {
+    background: #c0c0c0;
+    scale: 1.05;
+    box-shadow: -5px -5px 10px rgb(77, 77, 77);
+}
+h1 {
+    font-weight: 800;
+    text-align: center;
 }
 .deck a {
     text-decoration: none;
     color: #3498db;
     font-weight: bold;
+    font-size: 1.4rem;
 }
 .logout {
     text-align: right;
-    margin-bottom: 20px;
+    
 }
 .logout a {
     text-decoration: none;
     color: white;
     background: #e74c3c;
-    padding: 10px 15px;
+    padding: 5px;
+    margin-top: 6px;
     border-radius: 5px;
 }
+
+
+h1 {
+    margin-top: 1.6rem;
+}
+
+
+
+.titre {
+
+    margin: 0 auto;
+    margin-bottom: 0;
+    font-size: 1.3rem;
+    font-weight: 500;
+    font-style: italic;
+    text-align: center;
+    justify-content: space-between;
+
+
+}
+
+
+
+
+

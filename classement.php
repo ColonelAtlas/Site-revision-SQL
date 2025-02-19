@@ -1,22 +1,24 @@
 <?php
 session_start();
-$conn = new PDO('mysql:host=localhost;dbname=account_app;charset=utf8','root','');
+$conn = new PDO('mysql:host=localhost;dbname=account_app;charset=utf8', 'root', '');
 
-if (!isset($_SESSION['id'])) {
-    header('Location: login.php');
-    exit();
-}
+// Récupérer les 10 meilleurs utilisateurs classés par nombre de quiz terminés
+$stmt = $conn->prepare("SELECT pseudo, ttl_quizz, 
+                               COALESCE(images.image, 'avatar.jpg') AS image 
+                        FROM users 
+                        LEFT JOIN images ON users.id = images.id 
+                        ORDER BY ttl_quizz DESC 
+                        LIMIT 10");
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (isset($_SESSION['id']) && isset($_SESSION['pseudo'])) {
-
-    // Récupérer les informations de l'utilisateur avec jointure pour l'image
-    $stmt = $conn->prepare("SELECT users.id, users.pseudo, users.ttl_quizz, users.created_at,
-                                   COALESCE(images.image, 'avatar.jpg') AS image 
-                            FROM users 
-                            LEFT JOIN images ON users.id = images.id 
-                            WHERE users.id = ?");
-    $stmt->execute([$_SESSION['id']]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmta = $conn->prepare("SELECT users.id, users.pseudo, 
+                                       COALESCE(images.image, 'avatar.jpg') AS image 
+                                FROM users 
+                                LEFT JOIN images ON users.id = images.id 
+                                WHERE users.id = ?");
+        $stmta->execute([$_SESSION['id']]);
+        $usera = $stmta->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -24,16 +26,17 @@ if (isset($_SESSION['id']) && isset($_SESSION['pseudo'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil</title>
+    <title>Classement</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="profil.css">
     <link rel="stylesheet" type="text/css" href="a.css">
+    <link rel="stylesheet" type="text/css" href="classement.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js'></script><ap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-dark" style="border-bottom:3px solid">
         <div class="container-fluid">
           <a class="navbar-brand" href="index.php">Revisio</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +55,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['pseudo'])) {
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <div class="profile-pic">
-                      <img src="upload/<?php echo $user['image']; ?> ">
+                      <img src="upload/<?php echo $usera['image']; ?> ">
                    </div>
                <!-- You can also use icon as follows: -->
                  <!--  <i class="fas fa-user"></i> -->
@@ -68,19 +71,32 @@ if (isset($_SESSION['id']) && isset($_SESSION['pseudo'])) {
           </div>
         </div>
       </nav>
-    <div class="container mt-5">
-        <div class="card mx-auto shadow" style="max-width: 400px;">
-            <div class="card-body text-center">
-                <img src="upload/<?php echo htmlspecialchars($user['image']); ?>" class="rounded-circle" >
-                <h3><?php echo htmlspecialchars($user['pseudo']); ?></h3>
-                <p>ID : <?php echo htmlspecialchars($user['id']); ?></p>
-                <p>Nombre total de quiz terminés: <strong><?php echo htmlspecialchars($user['ttl_quizz']); ?></strong></p>
-                <p>Compte créé le: <strong><?php echo date('d/m/Y', strtotime($user['created_at'])); ?></strong></p>
-                <a href="edit.php" class="btn btn-primary">Modifier le profil</a>
-                <a href="deconnexion.php" class="btn btn-danger">Déconnexion</a>
-            </div>
-        </div>
-    </div>
+
+
+     <div class="container mt-5" style="width:fit-content; ">
+        <h2 class="text-center" style="color:white">🏆 Classement des meilleurs joueurs 🏆</h2>
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Avatar</th>
+                    <th>Pseudo</th>
+                    <th>Quizz Terminés</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $rank = 1; ?>
+                <?php foreach ($users as $user): ?>
+                    <tr>
+                        <td>#<?php echo $rank++; ?></td>
+                        <td><img src="upload/<?php echo htmlspecialchars($user['image']); ?>" class="avatar"></td>
+                        <td><?php echo htmlspecialchars($user['pseudo']); ?></td>
+                        <td><?php echo htmlspecialchars($user['ttl_quizz']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div> 
     <script>
       document.querySelectorAll('.dropdown-toggle').forEach(item => {
     item.addEventListener('click', event => {
@@ -96,10 +112,3 @@ if (isset($_SESSION['id']) && isset($_SESSION['pseudo'])) {
     </script>
 </body>
 </html>
-
-<?php 
-} else {
-    header("Location: login.php");
-    exit;
-} 
-?>

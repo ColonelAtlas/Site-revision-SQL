@@ -9,7 +9,6 @@ if (!isset($_SESSION['id'])) {
 
 if (isset($_SESSION['id']) && isset($_SESSION['pseudo'])) {
 
-    // Récupérer les informations de l'utilisateur avec jointure pour l'image
     $stmt = $conn->prepare("SELECT users.id, users.pseudo, users.ttl_quizz, users.created_at,
                                    COALESCE(images.image, 'avatar.jpg') AS image 
                             FROM users 
@@ -54,8 +53,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['pseudo'])) {
                   <div class="profile-pic">
                       <img src="upload/<?php echo $user['image']; ?> ">
                    </div>
-               <!-- You can also use icon as follows: -->
-                 <!--  <i class="fas fa-user"></i> -->
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" href="profil.php"><i class="fas fa-sliders-h fa-fw"></i> Profile</a></li>

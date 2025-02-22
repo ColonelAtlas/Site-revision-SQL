@@ -2,7 +2,6 @@
 session_start();
 $conn = new PDO('mysql:host=localhost;dbname=account_app;charset=utf8', 'root', '');
 
-// Récupérer les 10 meilleurs utilisateurs classés par nombre de quiz terminés
 $stmt = $conn->prepare("SELECT pseudo, ttl_quizz, 
                                COALESCE(images.image, 'avatar.jpg') AS image 
                         FROM users 
@@ -57,8 +56,6 @@ $stmta = $conn->prepare("SELECT users.id, users.pseudo,
                   <div class="profile-pic">
                       <img src="upload/<?php echo $usera['image']; ?> ">
                    </div>
-               <!-- You can also use icon as follows: -->
-                 <!--  <i class="fas fa-user"></i> -->
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" href="profil.php"><i class="fas fa-sliders-h fa-fw"></i> Profile</a></li>

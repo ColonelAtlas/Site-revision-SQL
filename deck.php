@@ -12,7 +12,6 @@ if (isset($_GET['id_chapitre']) && isset($_GET['id_deck'])) {
     $id_chapitre = intval($_GET['id_chapitre']);
     $id_deck = intval($_GET['id_deck']);
 
-    // Initialisation du quiz si ce n'est pas déjà fait
     if (!isset($_SESSION['questions']) || $_SESSION['current_question'] === null) {
         $reqCartes = $bdd->prepare('SELECT * FROM cartes WHERE id_chapitre = ? AND id_deck = ? ORDER BY RAND() LIMIT 10');
         $reqCartes->execute([$id_chapitre, $id_deck]);
@@ -25,17 +24,14 @@ if (isset($_GET['id_chapitre']) && isset($_GET['id_deck'])) {
     $questions = $_SESSION['questions'];
     $current_question_index = $_SESSION['current_question'];
 
-    // Si le quiz est terminé
     if ($current_question_index >= count($questions)) {
         $score = $_SESSION['score'];
         $total_questions = count($questions);
         $id = $_SESSION['id'];
 
-        // Incrémente le nombre de quiz terminés
         $stmt = $bdd->prepare("UPDATE users SET ttl_quizz = ttl_quizz + 1 WHERE id = ?");
         $stmt->execute([$id]);
 
-        // Efface les sessions du quiz
         unset($_SESSION['questions'], $_SESSION['current_question'], $_SESSION['score']);
 
         echo "<!DOCTYPE html>
@@ -92,10 +88,8 @@ if (isset($_GET['id_chapitre']) && isset($_GET['id_deck'])) {
         exit;
     }
 
-    // Question actuelle
     $current_question = $questions[$current_question_index];
 
-    // Vérification de la réponse
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $reponse_utilisateur = $_POST['reponse'] ?? '';
         if ($reponse_utilisateur === $current_question['reponse_vrai']) {

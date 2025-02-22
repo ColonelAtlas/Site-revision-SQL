@@ -7,7 +7,6 @@ if (!isset($_SESSION['id'])) {
 }
 $conn = new PDO('mysql:host=localhost;dbname=account_app;charset=utf8', 'root', '');
 
-// Récupérer les infos de l'utilisateur avec jointure pour l'image
 $stmt = $conn->prepare("SELECT users.id, users.pseudo, 
 COALESCE(images.image, 'default.png') AS image FROM users LEFT JOIN images ON users.id = images.id WHERE users.id = ?");
 $stmt->execute([$_SESSION['id']]);
@@ -49,8 +48,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                   <div class="profile-pic">
                       <img src="upload/<?php echo $user['image']; ?> ">
                    </div>
-               <!-- You can also use icon as follows: -->
-                 <!--  <i class="fas fa-user"></i> -->
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" href="profil.php"><i class="fas fa-sliders-h fa-fw"></i> Profile</a></li>
@@ -67,12 +64,10 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
     <form class="shadow w-450 p-3" action="php/edit.php" method="post" enctype="multipart/form-data">
         <h4 class="display-4 fs-1">Modifier le profil</h4><br>
 
-<!-- Message d'erreur -->
         <?php if(isset($_GET['error'])) { ?>
         <div class="alert alert-danger"><?php echo $_GET['error']; ?></div>
         <?php } ?>
 
-<!-- Message de succès -->
         <?php if(isset($_GET['success'])) { ?>
         <div class="alert alert-success"><?php echo $_GET['success']; ?></div>
         <?php } ?>
